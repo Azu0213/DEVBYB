@@ -3,9 +3,8 @@
   publish = "."
   command = ""
 
-# SPA-style fallback (prevents 404 on any path)
+# Fallback so any path serves index.html (prevents 404s)
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-
