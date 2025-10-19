@@ -62,12 +62,3 @@ Ensure your **`netlify.toml`** includes:
 📞 818-261-7850
 ✉️ devbyb12@gmail.com
 🌐 GitHub Repository
-
----
-
-After adding this file:
-
-```bash
-git add README.md
-git commit -m "Add project README"
-git push
