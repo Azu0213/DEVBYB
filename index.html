@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="description" content="DEVBYB — Custom websites built fast. Pick a planet to match your scope and tailor your brief. 1-week delivery on all plans." />
+  <title>DEVBYB — Pick a planet to get started</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="alternate icon" href="/favicon.ico" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:title" content="DEVBYB — Custom websites built fast" />
+  <meta property="og:description" content="Starter, Pro, Premium, Enterprise — pick a planet, tailor your brief, and launch in 1 week." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://yourdomain.com" />
+  <meta property="og:image" content="/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="stylesheet" href="styles.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <!-- Splash -->
+  <section id="splash" aria-label="Welcome">
+    <canvas id="splash-stars" aria-hidden="true"></canvas>
+    <div class="splash-inner">
+      <div class="earth-container">
+        <div class="earth" id="earthClick" role="button" tabindex="0" aria-label="Click to launch">
+          <span class="earth-text" aria-hidden="true">Click to launch</span>
+        </div>
+        <div class="atmos-glow"></div>
+        <div class="horizon-glow"></div>
+      </div>
+      <canvas id="rocket-canvas" aria-hidden="true"></canvas>
+    </div>
+  </section>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="brand">DEVBYB</div>
+  </header>
+
+  <!-- Hero / Home -->
+  <section class="hero" id="home" hidden>
+    <div class="hero-copy">
+      <h1>Pick a planet — <span class="thin">launch your project</span></h1>
+      <p class="sub">Starter · Professional · Premium · Enterprise</p>
+      <p class="hint">Custom websites built fast — every project includes responsive design, animations, and SEO foundations.</p>
+      <p class="hint">Each planet opens a world where you can tailor your brief.</p>
+    </div>
+
+    <!-- Samples Strip (hidden by default) -->
+    <div class="samples hidden" aria-label="Recent samples">
+      <img src="https://dummyimage.com/420x260/0b142c/ffffff&text=Sample+1" alt="Sample project one"/>
+      <img src="https://dummyimage.com/420x260/0b142c/ffffff&text=Sample+2" alt="Sample project two"/>
+      <img src="https://dummyimage.com/420x260/0b142c/ffffff&text=Sample+3" alt="Sample project three"/>
+    </div>
+
+    <!-- Planets -->
+    <div id="planet-field" aria-label="Build plans"></div>
+  </section>
+
+  <!-- Why Us -->
+  <section id="why" class="why-us">
+    <h2>Why teams choose DEVBYB</h2>
+    <ul class="reasons">
+      <li>🚀 <strong>1-week delivery</strong> — reliable, fast turnaround.</li>
+      <li>🎨 <strong>Tailored design</strong> — unique builds, not templates.</li>
+      <li>💬 <strong>Direct communication</strong> — talk with real developers & designers.</li>
+      <li>📈 <strong>Growth support</strong> — optional Monthly Care keeps improving your site.</li>
+    </ul>
+  </section>
+
+  <!-- Plan World (Modal overlay) -->
+  <section id="plan-world" role="dialog" aria-modal="true" aria-labelledby="plan-title" hidden>
+    <canvas id="world-canvas" aria-hidden="true"></canvas>
+    <div class="world-overlay" aria-hidden="true"></div>
+
+    <div class="world-content" tabindex="-1">
+      <button class="world-back" id="backToBubbles" type="button">← Back to planets</button>
+
+      <!-- Tier rail -->
+      <nav class="tier-rail" aria-label="Plan tiers">
+        <button class="tier" data-plan="starter" aria-pressed="false" type="button">Starter</button>
+        <button class="tier" data-plan="pro" aria-pressed="false" type="button">Professional</button>
+        <button class="tier" data-plan="premium" aria-pressed="false" type="button">Premium</button>
+        <button class="tier" data-plan="enterprise" aria-pressed="false" type="button">Enterprise</button>
+      </nav>
+
+      <div class="world-head">
+        <h2 id="plan-title">Plan</h2>
+        <p id="plan-blurb"></p>
+        <div class="world-meta">
+          <strong id="plan-price"></strong>
+          <span class="dot">•</span>
+          <span id="plan-timeline">1-week delivery</span>
+        </div>
+      </div>
+
+      <!-- Live Estimate -->
+      <aside class="estimate sticky-estimate" aria-live="polite">
+        <div class="estimate-row">
+          <div>
+            <div class="est-title">Estimated build total (before tax)</div>
+            <button type="button" class="linklike" id="toggleBreakdown" aria-expanded="false" aria-controls="breakdown">See breakdown</button>
+          </div>
+          <div class="est-amount" id="estTotal">$0</div>
+        </div>
+
+        <!-- NEW: Total incl. tax -->
+        <div class="estimate-row" style="margin-top:8px;">
+          <div>
+            <div class="est-title">Total incl. tax</div>
+            <div class="micro" id="taxNote"></div>
+          </div>
+          <div class="est-amount" id="estTotalTax">—</div>
+        </div>
+
+        <div class="estimate-row" style="margin-top:8px;">
+          <div class="est-title">Monthly (optional)</div>
+          <div class="est-amount" id="estMonthly">—</div>
+        </div>
+
+        <div id="breakdown" hidden>
+          <ul class="break-list" id="breakList"></ul>
+          <p class="micro">What changes price? Pages, add-ons, and Enterprise-level integrations/complexity.</p>
+        </div>
+      </aside>
+
+      <!-- Form -->
+      <form id="intakeForm" novalidate class="form-card card">
+        <div class="form-progress">
+          <div class="progress-track"><div class="progress-bar" style="width: 100%"></div></div>
+          <div class="progress-text">Brief</div>
+        </div>
+
+        <!-- Price drivers up top -->
+        <div class="field-row">
+          <label>Pages needed (rough)
+            <input type="number" id="pages" min="0" max="60" placeholder="e.g., 6" />
+            <span class="micro">Leave blank if unsure; we’ll help estimate.</span>
+          </label>
+          <label>Style / vibe
+            <select id="vibe" required>
+              <option value="">Select a vibe…</option>
+              <option>Futuristic &amp; sleek</option>
+              <option>Minimal &amp; clean</option>
+              <option>Bold &amp; colorful</option>
+              <option>Warm &amp; friendly</option>
+              <option>Luxury / premium</option>
+            </select>
+          </label>
+        </div>
+
+        <!-- Add-ons -->
+        <fieldset class="feature-set">
+          <legend>Add-ons</legend>
+          <label class="check"><input type="checkbox" id="addonSprint"/> Priority 72-hr sprint</label>
+          <label class="check"><input type="checkbox" id="addonBrand"/> Brand kit</label>
+          <label class="check"><input type="checkbox" id="addonCopy"/> Copywriting (per page)</label>
+          <label class="check"><input type="checkbox" id="addonSEO"/> SEO deep setup</label>
+        </fieldset>
+
+        <!-- Core info -->
+        <div class="field-row">
+          <label>Full name
+            <input type="text" id="fullName" required placeholder="e.g., Jordan Lee" />
+          </label>
+          <label>Email
+            <input type="email" id="email" required placeholder="you@example.com" />
+          </label>
+        </div>
+
+        <!-- NEW: Phone + Project -->
+        <div class="field-row">
+          <label>Phone number
+            <input type="tel" id="phone" required placeholder="e.g., (555) 555-5555" />
+            <span class="micro">Mobile or best contact number.</span>
+          </label>
+          <label>Business / project name
+            <input type="text" id="projectName" required placeholder="Your brand or project" />
+          </label>
+        </div>
+
+        <div class="field-row">
+          <label>Color direction
+            <select id="colors">
+              <option>Use my brand colors</option>
+              <option>Developers’ choice</option>
+              <option>Dark mode first</option>
+              <option>Light mode first</option>
+            </select>
+          </label>
+          <!-- NEW: Website Type -->
+          <label>Website type
+            <select id="websiteType">
+              <option value="">Select website type…</option>
+              <option value="marketing">Marketing / Landing</option>
+              <option value="portfolio">Portfolio / Personal</option>
+              <option value="blog">Blog / Content</option>
+              <option value="ecommerce">E-commerce</option>
+              <option value="saas">SaaS / Web App</option>
+              <option value="nonprofit">Non-profit / Org</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
+        </div>
+
+        <!-- NEW: Website Type Other (hidden until "Other") -->
+        <div class="field-row" id="websiteTypeOtherRow" hidden>
+          <label>Please describe your website type
+            <input type="text" id="websiteTypeOther" placeholder="Tell us what you have in mind" />
+          </label>
+          <div></div>
+        </div>
+
+        <label>What is your company/brand about?
+          <textarea id="about" required placeholder="Briefly describe what you do and who it’s for."></textarea>
+        </label>
+
+        <!-- NEW: Capabilities (features) -->
+        <fieldset class="feature-set">
+          <legend>Needed capabilities</legend>
+          <label class="check"><input type="checkbox" name="feature" value="cms" /> CMS / blog</label>
+          <label class="check"><input type="checkbox" name="feature" value="ecommerce" /> E-commerce / checkout</label>
+          <label class="check"><input type="checkbox" name="feature" value="auth" /> Login / accounts</label>
+          <label class="check"><input type="checkbox" name="feature" value="forms" /> Custom forms / intake</label>
+          <label class="check"><input type="checkbox" name="feature" value="integrations" /> Integrations (CRM, payments, etc.)</label>
+          <label class="check"><input type="checkbox" name="feature" value="i18n" /> Multi-language</label>
+        </fieldset>
+
+        <!-- NEW: Inspiration links (or type None) -->
+        <label>Inspiration links (or type “None”)
+          <textarea id="inspo" placeholder="Paste links separated by space or new lines. Type “None” if you don’t have any."></textarea>
+        </label>
+
+        <label>Notes / examples (optional)
+          <textarea id="notes" placeholder="Links, must-haves, constraints, etc."></textarea>
+        </label>
+
+        <!-- What we need checklist -->
+        <fieldset class="feature-set">
+          <legend>What we need</legend>
+          <ul class="need-list">
+            <li>Logo (SVG/PNG)</li>
+            <li>3–5 inspirations</li>
+            <li>Goals &amp; must-haves</li>
+          </ul>
+        </fieldset>
+
+        <!-- Files -->
+        <label>Attach files (optional)
+          <input
+            type="file"
+            id="files"
+            multiple
+            accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.rtf,.csv,.jpg,.jpeg,.png,.gif,.svg,.webp,.mp4,.mov,.avi,.mkv,.webm,.zip,.heic"
+          />
+          <span class="micro">Tip: You can also drag &amp; drop files below.</span>
+        </label>
+        <ul id="filePreview" class="file-preview" aria-live="polite"></ul>
+
+        <!-- Monthly Maintenance -->
+        <fieldset class="feature-set">
+          <legend>Monthly Care (optional)</legend>
+          <p class="feature-note">
+            💡 Keep your site fast, secure, and improving. Updates, backups, analytics, and design/content tweaks.
+          </p>
+
+          <label>Would you like ongoing monthly care?
+            <div class="care-row">
+              <select id="maintenance" aria-describedby="careHelp">
+                <option value="">No thanks</option>
+                <option value="basic">Basic Care ($199/mo)</option>
+                <option value="growth">Growth Care ($499/mo)</option>
+                <option value="pro">Pro Care ($899/mo)</option>
+              </select>
+              <button type="button" id="careInfo" class="btn secondary" aria-haspopup="dialog" aria-controls="careDialog" title="What's included in Monthly Care?">What’s included?</button>
+            </div>
+            <span id="careHelp" class="micro">Monthly is optional and billed separately from the build.</span>
+          </label>
+
+          <ul class="micro" style="margin-top:8px; line-height:1.5">
+            <li><strong>Basic:</strong> Updates &amp; backups, uptime checks, security patches.</li>
+            <li><strong>Growth:</strong> Basic + analytics reviews, content tweaks, speed/SEO touchups.</li>
+            <li><strong>Pro:</strong> Priority support, quarterly roadmap, A/B tests, performance &amp; SEO audits.</li>
+          </ul>
+        </fieldset>
+
+        <!-- What happens next -->
+        <section class="feature-set" aria-label="What happens next">
+          <legend>What happens next</legend>
+          <ul class="micro" style="margin:6px 0 0 0; line-height:1.6">
+            <li><strong>Same-day reply</strong> with clarifying questions (LA time).</li>
+            <li><strong>Written quote + 25% deposit link.</strong></li>
+            <li><strong>Day 1–2:</strong> design direction & content mapping.</li>
+            <li><strong>Day 3–5:</strong> build, motion, integrations, speed & a11y checks.</li>
+            <li><strong>Day 6:</strong> QA + revisions. <strong>Day 7:</strong> launch & handoff.</li>
+          </ul>
+        </section>
+
+        <!-- Honeypot (hidden) -->
+        <div style="position:absolute;left:-5000px;top:auto;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
+          <label>Fax
+            <input type="text" id="companyFax" tabindex="-1" autocomplete="off" />
+          </label>
+        </div>
+
+        <div class="cta-row">
+          <button class="btn primary" id="submitBrief" type="submit">Send brief</button>
+        </div>
+
+        <p class="after-submit-note">
+          Taxes &amp; fees added where applicable. 25% deposit on acceptance. Scope may adjust quote.
+          We operate on Los Angeles time. Quick replies by phone or email.
+        </p>
+      </form>
+
+      <!-- AI Chat -->
+      <aside class="ai-box">
+        <h3>Questions?</h3>
+        <div class="chat-log" id="chatLog" aria-live="polite"></div>
+        <div class="chat-row">
+          <input id="chatInput" placeholder="Ask pricing, timeline, SEO, e-commerce, or anything…" />
+          <button id="chatSend" class="btn primary" type="button">Ask</button>
+        </div>
+        <p class="ai-note">Need help now? Call <a href="tel:+18182617850">818-261-7850</a> or email <a href="mailto:devbyb12@gmail.com">devbyb12@gmail.com</a>.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Thank You -->
+  <section id="thankyou" hidden>
+    <canvas id="confetti"></canvas>
+    <div class="thanks-card">
+      <button id="exitThanks" class="world-back" type="button" aria-label="Exit thank you">✕</button>
+      <h2>🎉 Congrats — your brief is in!</h2>
+      <p>We’ll review everything and email you next steps within a few hours.</p>
+    </div>
+  </section>
+
+  <!-- Tip Modal -->
+  <dialog id="tipModal" aria-labelledby="tipTitle">
+    <div class="tip-content">
+      <button id="tipClose" class="btn" type="button" aria-label="Close">✕</button>
+      <h3 id="tipTitle">Enterprise custom usually includes</h3>
+      <ul>
+        <li>Complex integrations (CRM, payments, auth/SSO)</li>
+        <li>Dashboards/portals with role-based access</li>
+        <li>Automations &amp; data pipelines</li>
+        <li>Internationalization/multi-brand support</li>
+        <li>Security hardening &amp; compliance</li>
+      </ul>
+    </div>
+  </dialog>
+
+  <!-- Monthly Care Info Dialog -->
+  <dialog id="careDialog" aria-labelledby="careDialogTitle">
+    <div class="tip-content">
+      <button id="careClose" class="btn" type="button" aria-label="Close">✕</button>
+      <h3 id="careDialogTitle">Monthly Care — what’s included</h3>
+      <ul>
+        <li><strong>Basic ($199/mo):</strong> Updates &amp; backups, uptime checks, security patches.</li>
+        <li><strong>Growth ($499/mo):</strong> Everything in Basic + analytics reviews, content tweaks, speed/SEO touchups.</li>
+        <li><strong>Pro ($899/mo):</strong> Priority support, quarterly roadmap, A/B tests, performance &amp; SEO audits.</li>
+      </ul>
+      <p class="micro">You can cancel/change tiers anytime. Monthly is billed separately from the build.</p>
+    </div>
+  </dialog>
+
+  <!-- Privacy Policy Modal -->
+  <dialog id="privacyDialog" aria-labelledby="privacyTitle">
+    <div class="tip-content" style="max-width: 780px">
+      <button id="privacyClose" class="btn" type="button" aria-label="Close">✕</button>
+      <h3 id="privacyTitle">Privacy Policy</h3>
+      <p class="micro">Last updated: <span id="privacyDate"></span></p>
+      <p>We collect the information you submit in the brief (name, email, project details) and any files you attach.</p>
+      <ul>
+        <li><strong>Use:</strong> Scoping, quoting, and delivering your project.</li>
+        <li><strong>Storage:</strong> Google services (Gmail/Drive/Sheets). Files over email size limits may be saved to our private Drive.</li>
+        <li><strong>Retention:</strong> Kept for the project duration and up to 12 months after for support/records, then removed.</li>
+        <li><strong>Access:</strong> Request export or deletion any time at <a href="mailto:devbyb12@gmail.com">devbyb12@gmail.com</a>.</li>
+        <li><strong>Third parties:</strong> Payment processors (if you pay a deposit), hosting/analytics providers you approve.</li>
+        <li><strong>Security:</strong> Limited internal access; we don’t sell personal data.</li>
+      </ul>
+      <p>Questions? Email <a href="mailto:devbyb12@gmail.com">devbyb12@gmail.com</a>.</p>
+    </div>
+  </dialog>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" hidden role="status" aria-live="polite"></div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    © <span id="year"></span> DEVBYB. Built with care. ·
+    <a href="#" id="privacyLink" aria-label="Privacy policy" style="color:inherit;text-decoration:underline">Privacy</a>
+  </footer>
+</body>
+</html>
