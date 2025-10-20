@@ -101,9 +101,17 @@ body {
 /* ========= HERO ========= */
 #home[hidden]{ display:none; }
 .hero { position: relative; min-height: 100dvh; display: grid; place-items: center; text-align: center; padding: calc(80px + var(--space-xl)) var(--space-m) var(--space-2xl); }
-/* FIX: keep hero text above planets on all devices */
-.hero-copy { position: relative; z-index: 20; }
+/* FIX: keep hero text above planets on all devices AND let clicks pass through text */
+.hero-copy { position: relative; z-index: 20; /* CLICK-THROUGH */ pointer-events: none; }
 .hero-copy > *:not(:last-child){ margin-bottom: var(--space-s); }
+/* Re-enable pointer events for interactive items inside hero text */
+.hero-copy .cta-row,
+.hero-copy a,
+.hero-copy button,
+.hero-copy input,
+.hero-copy select { /* CLICK-THROUGH */
+  pointer-events: auto;
+}
 .hero h1 { font-size: clamp(32px, 5vw, 56px); line-height: 1.05; margin: 0; text-shadow: 0 8px 26px rgba(14,165,233,.25); }
 .thin { font-weight: 300; }
 .sub { font-size: clamp(14px, 2.2vw, 18px); opacity: .9; }
@@ -145,6 +153,8 @@ body {
   backdrop-filter: blur(6px) saturate(1.06);
   border: 1px solid rgba(255,255,255,0.08);
   will-change: transform;
+  /* ensure planets receive taps even under overlaying hero text */
+  pointer-events: auto; /* CLICK-THROUGH */
 }
 .planet:hover { transform: scale(1.05); box-shadow: inset -4px -6px 12px rgba(0,0,0,.5), 0 0 22px rgba(147,197,253,.25); filter: saturate(1.02); }
 .glossy::after {
