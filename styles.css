@@ -27,6 +27,9 @@ html, body { margin: 0; padding: 0; height: 100%; }
   --space-2xl: 48px;
 
   --container: min(1120px, 92vw);
+
+  /* NEW: dynamic hero offset for phone spacing fix */
+  --hero-offset: 240px;
 }
 
 [hidden] { display: none !important; }
@@ -114,7 +117,7 @@ body {
   position: absolute;
   inset-inline: 0;
   bottom: 0;
-  top: 240px;
+  top: var(--hero-offset); /* was 240px */
   min-height: 52vh;
   overflow: hidden;
   z-index: 5;
@@ -482,4 +485,9 @@ input[type="file"]::file-selector-button {
 }
 input[type="file"]::file-selector-button:hover {
   filter: brightness(1.06);
+}
+
+/* ================== OPTIONAL: prevent chip clipping on small phones ================== */
+@media (max-width: 540px) {
+  .price-chip { bottom: -24px; } /* was -34px */
 }
