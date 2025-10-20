@@ -101,6 +101,8 @@ body {
 /* ========= HERO ========= */
 #home[hidden]{ display:none; }
 .hero { position: relative; min-height: 100dvh; display: grid; place-items: center; text-align: center; padding: calc(80px + var(--space-xl)) var(--space-m) var(--space-2xl); }
+/* FIX: keep hero text above planets on all devices */
+.hero-copy { position: relative; z-index: 20; }
 .hero-copy > *:not(:last-child){ margin-bottom: var(--space-s); }
 .hero h1 { font-size: clamp(32px, 5vw, 56px); line-height: 1.05; margin: 0; text-shadow: 0 8px 26px rgba(14,165,233,.25); }
 .thin { font-weight: 300; }
@@ -488,6 +490,8 @@ input[type="file"]::file-selector-button:hover {
 }
 
 /* ================== OPTIONAL: prevent chip clipping on small phones ================== */
-@media (max-width: 540px) {
+@media (max-width: 560px) {
+  /* FIX: a bit more headroom so planets don't cover the hero line on small phones */
+  #planet-field { top: 300px; }
   .price-chip { bottom: -24px; } /* was -34px */
 }
