@@ -103,6 +103,21 @@ async function postWithTimeout(url, options, ms = 60000) {
   finally { clearTimeout(id); }
 }
 
+/* --- NEW: set planet field offset based on hero copy height --- */
+function setPlanetFieldOffset() {
+  const hero = el(".hero-copy");
+  const field = el("#planet-field");
+  if (!hero || !field) return;
+
+  // distance from section top to bottom of the hero text
+  const offset = hero.offsetHeight + 32; // breathing room
+  document.documentElement.style.setProperty("--hero-offset", offset + "px");
+
+  // ensure the field is tall enough even on short viewports
+  const minH = Math.max(window.innerHeight - offset - 120, 360);
+  field.style.minHeight = `${minH}px`;
+}
+
 /* ========= SPLASH STARS ========= */
 function startSplashStars() {
   const c = el("#splash-stars"); if (!c) return;
@@ -231,6 +246,10 @@ function stopPlanets() { cancelAnimationFrame(planetsRAF); planetsRAF = 0; movin
 function createPlanets() {
   const field = el("#planet-field");
   if (!field) return;
+
+  /* NEW: ensure planet field starts below the hero copy */
+  setPlanetFieldOffset();
+
   stopPlanets();
   field.innerHTML = "";
 
@@ -251,7 +270,14 @@ function createPlanets() {
 
   const rect = field.getBoundingClientRect();
   const PAD = 16;
-  const size = clamp(Math.floor(rect.width * 0.16), 130, 200);
+
+  /* NEW: size from vmin so it respects short phone heights */
+  const vmin = Math.min(rect.width, rect.height);
+  const isPhone = window.innerWidth < 540;
+  const size = isPhone
+    ? clamp(Math.floor(vmin * 0.28), 96, 160)
+    : clamp(Math.floor(vmin * 0.20), 120, 220);
+
   const L = PAD + size / 2, R = rect.width - PAD - size / 2;
   const T = PAD + size / 2, B = rect.height - PAD - size / 2;
   const placed = [];
@@ -908,13 +934,20 @@ function init() {
   const ty = el("#thankyou");
   if (ty) ty.hidden = true;
 
+  /* NEW: compute dynamic hero offset before first layout */
+  setPlanetFieldOffset();
+
   createPlanets();
   let resizeTimer;
   addEventListener(
     "resize",
     () => {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(createPlanets, 120);
+      resizeTimer = setTimeout(() => {
+        /* NEW: keep offset + layout in sync on resize/orientation */
+        setPlanetFieldOffset();
+        createPlanets();
+      }, 120);
     },
     { passive: true }
   );
