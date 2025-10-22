@@ -32,31 +32,5 @@ Each plan comes with unique features, pricing, and a one-week delivery timeline.
 
 ## 🧩 File Structure
 
----
 
-## ⚙️ Deployment (Netlify)
-This project is static — no frameworks or build steps required.
-
-| Setting | Value |
-|----------|--------|
-| **Base directory** | `.` |
-| **Build command** | *(leave blank)* |
-| **Publish directory** | `.` |
-| **Functions directory** | *(leave blank)* |
-
-Ensure your **`netlify.toml`** includes:
-
-```toml
-[build]
-  base = "."
-  publish = "."
-  command = ""
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-💬 Contact
-📞 818-261-7850
-✉️ devbyb12@gmail.com
 🌐 GitHub Repository
