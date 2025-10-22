@@ -7,8 +7,6 @@ Each plan comes with unique features, pricing, and a one-week delivery timeline.
 
 ---
 
-## 🚀 Live Demo
-[https://devbyb7.netlify.app](https://devbyb7.netlify.app)
 
 ---
 
