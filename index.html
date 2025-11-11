@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"/>
   <meta name="description" content="DEVBYB — Custom websites built fast. Pick a planet to match your scope and tailor your brief. 1-week delivery on all plans." />
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
   <title>DEVBYB — Pick a planet to get started</title>
 
   <!-- Favicon -->
@@ -45,10 +47,51 @@
   <!-- Hero / Home -->
   <section class="hero" id="home" hidden>
     <div class="hero-copy">
-      <h1>Pick a planet — <span class="thin">launch your project</span></h1>
+      <h1>Pick a planet or chat with the alien — <span class="thin">launch your website</span></h1>
       <p class="sub">Starter · Professional · Premium · Enterprise</p>
       <p class="hint">Custom websites built fast — every project includes responsive design, animations, and SEO foundations.</p>
-      <p class="hint">Each planet opens a world where you can tailor your brief.</p>
+      <p class="hint">Each planet opens a world where you can tailor your brief, or let our alien guide help you!</p>
+    </div>
+    
+    <!-- Alien Chat Button -->
+    <div class="alien-container" id="alienContainer">
+      <div class="alien-ship" id="alienShip">
+        <svg viewBox="0 0 120 120" width="120" height="120">
+          <!-- UFO Ship -->
+          <ellipse cx="60" cy="70" rx="45" ry="12" fill="#4a5568" opacity="0.3"/>
+          <ellipse cx="60" cy="65" rx="50" ry="15" fill="url(#shipGradient)"/>
+          <circle cx="60" cy="55" r="25" fill="url(#domeGradient)"/>
+          
+          <!-- Alien Inside -->
+          <ellipse cx="60" cy="50" rx="12" ry="16" fill="#7fff7f"/>
+          <circle cx="56" cy="48" r="4" fill="#000"/>
+          <circle cx="64" cy="48" r="4" fill="#000"/>
+          <circle cx="56.5" cy="47" r="1.5" fill="#fff"/>
+          <circle cx="64.5" cy="47" r="1.5" fill="#fff"/>
+          <path d="M 54 56 Q 60 59 66 56" stroke="#000" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          
+          <!-- Antenna -->
+          <line x1="60" y1="35" x2="60" y2="28" stroke="#7fff7f" stroke-width="2"/>
+          <circle cx="60" cy="27" r="3" fill="#7fff7f"/>
+          
+          <!-- Light beams -->
+          <path d="M 35 65 L 30 85 L 40 85 Z" fill="#ffff00" opacity="0.3" class="beam"/>
+          <path d="M 60 65 L 55 85 L 65 85 Z" fill="#ffff00" opacity="0.3" class="beam"/>
+          <path d="M 85 65 L 80 85 L 90 85 Z" fill="#ffff00" opacity="0.3" class="beam"/>
+          
+          <defs>
+            <linearGradient id="shipGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#94a3b8;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#475569;stop-opacity:1" />
+            </linearGradient>
+            <radialGradient id="domeGradient">
+              <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:0.6" />
+              <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0.8" />
+            </radialGradient>
+          </defs>
+        </svg>
+        <div class="alien-tooltip">Alien Chat 🛸</div>
+      </div>
     </div>
 
     <!-- Samples Strip (hidden by default) -->
@@ -87,6 +130,7 @@
         <button class="tier" data-plan="pro" aria-pressed="false" type="button">Professional</button>
         <button class="tier" data-plan="premium" aria-pressed="false" type="button">Premium</button>
         <button class="tier" data-plan="enterprise" aria-pressed="false" type="button">Enterprise</button>
+        <button class="tier" data-plan="update" aria-pressed="false" type="button">Update Website</button>
       </nav>
 
       <div class="world-head">
@@ -161,6 +205,7 @@
           <label class="check"><input type="checkbox" id="addonBrand"/> Brand kit</label>
           <label class="check"><input type="checkbox" id="addonCopy"/> Copywriting (per page)</label>
           <label class="check"><input type="checkbox" id="addonSEO"/> SEO deep setup</label>
+          <label class="check"><input type="checkbox" id="addonAIChat"/> AI Chat / Chatbot (custom pricing)</label>
         </fieldset>
 
         <!-- Core info -->
@@ -331,13 +376,61 @@
     </div>
   </section>
 
+  <!-- Alien Chat Dialog -->
+  <div class="alien-dialog" id="alienDialog">
+    <div class="alien-dialog-content">
+      <button class="alien-close" id="alienClose" aria-label="Close alien chat">✕</button>
+      <div class="alien-header">
+        <div class="alien-avatar">
+          <svg viewBox="0 0 120 120" width="60" height="60">
+            <defs>
+              <linearGradient id="shipGradientDialog" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#8a9ba8;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#4a5568;stop-opacity:1" />
+              </linearGradient>
+              <radialGradient id="domeGradientDialog" cx="50%" cy="40%">
+                <stop offset="0%" style="stop-color:#a0c4ff;stop-opacity:0.4" />
+                <stop offset="100%" style="stop-color:#4a5568;stop-opacity:0.6" />
+              </radialGradient>
+            </defs>
+            <!-- UFO Ship -->
+            <ellipse cx="60" cy="70" rx="45" ry="12" fill="#4a5568" opacity="0.3"/>
+            <ellipse cx="60" cy="65" rx="50" ry="15" fill="url(#shipGradientDialog)"/>
+            <circle cx="60" cy="55" r="25" fill="url(#domeGradientDialog)"/>
+            
+            <!-- Alien Inside -->
+            <ellipse cx="60" cy="50" rx="12" ry="16" fill="#7fff7f"/>
+            <circle cx="56" cy="48" r="4" fill="#000"/>
+            <circle cx="64" cy="48" r="4" fill="#000"/>
+            <circle cx="56.5" cy="47" r="1.5" fill="#fff"/>
+            <circle cx="64.5" cy="47" r="1.5" fill="#fff"/>
+            <path d="M 54 56 Q 60 59 66 56" stroke="#000" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            
+            <!-- Antenna -->
+            <line x1="60" y1="35" x2="60" y2="28" stroke="#7fff7f" stroke-width="2"/>
+            <circle cx="60" cy="27" r="3" fill="#7fff7f"/>
+          </svg>
+        </div>
+        <div class="alien-title">
+          <h3>Alien Chat 🛸</h3>
+          <p class="alien-subtitle">Your cosmic guide to website building</p>
+        </div>
+      </div>
+      <div class="alien-chat-log" id="alienChatLog" aria-live="polite"></div>
+      <div class="alien-chat-input">
+        <input id="alienChatInput" placeholder="Tell me what you're looking for..." />
+        <button id="alienChatSend" class="btn primary" type="button">Send</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Thank You -->
   <section id="thankyou" hidden>
     <canvas id="confetti"></canvas>
     <div class="thanks-card">
       <button id="exitThanks" class="world-back" type="button" aria-label="Exit thank you">✕</button>
       <h2>🎉 Congrats — your brief is in!</h2>
-      <p>We’ll review everything and email you next steps within a few hours.</p>
+      <p>We'll review everything and email you next steps within a few hours.</p>
     </div>
   </section>
 
