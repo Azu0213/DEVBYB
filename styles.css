@@ -1,6 +1,23 @@
 /* ========= BASE ========= */
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; height: 100%; }
+* { 
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
+
+html, body { 
+  margin: 0; 
+  padding: 0; 
+  height: 100%;
+  /* Prevent horizontal scroll on all devices */
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+/* Smooth scrolling for all devices */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
+}
 
 :root {
   --accent: hsl(220 86% 54%);
@@ -155,8 +172,17 @@ body {
   will-change: transform;
   /* ensure planets receive taps even under overlaying hero text */
   pointer-events: auto; /* CLICK-THROUGH */
+  /* Touch improvements */
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
-.planet:hover { transform: scale(1.05); box-shadow: inset -4px -6px 12px rgba(0,0,0,.5), 0 0 22px rgba(147,197,253,.25); filter: saturate(1.02); }
+.planet:hover, .planet:active { 
+  transform: scale(1.05); 
+  box-shadow: inset -4px -6px 12px rgba(0,0,0,.5), 0 0 22px rgba(147,197,253,.25); 
+  filter: saturate(1.02); 
+}
 .glossy::after {
   content: ""; position: absolute; inset: 0; border-radius: 50%;
   background: radial-gradient(circle at 28% 30%, rgba(255,255,255,0.22), transparent 62%);
@@ -216,6 +242,21 @@ body {
   box-shadow: 0 0 0 3px rgba(255,255,255,0.06) inset, 0 0 36px rgba(255,255,255,0.06);
   pointer-events: none; opacity: .95;
 }
+.p-update {
+  background:
+    repeating-linear-gradient(24deg, hsla(180, 65%, 75%, .22) 0 14px, hsla(175, 55%, 58%, .20) 14px 28px, hsla(170, 45%, 42%, .18) 28px 42px),
+    radial-gradient(circle at 48% 52%, hsla(180, 45%, 28%, .38), hsla(175, 38%, 18%, .44) 70%);
+  box-shadow: inset -8px -14px 22px rgba(0,0,0,.50), 0 0 20px rgba(100,220,220,.18);
+}
+.p-update::before {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  width: 175%; height: 38%;
+  transform: translate(-50%, -50%) rotate(-12deg);
+  border: 2px solid rgba(100,255,255,0.18);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(100,255,255,0.08) inset, 0 0 28px rgba(100,255,255,0.08);
+  pointer-events: none; opacity: .92;
+}
 
 /* ========= PLAN MODAL ========= */
 #plan-world { position: fixed; inset: 0; display: grid; place-items: center; z-index: 80; overflow-y: auto; }
@@ -274,8 +315,15 @@ label { display: grid; gap: 6px; font-size: 14px; }
 input[type="text"], input[type="email"], input[type="number"], input[type="tel"], select, textarea {
   width: 100%; padding: 12px; border: 1px solid var(--field-border); border-radius: 12px; font: inherit;
   background: var(--field-bg); color: #dbe7ff; outline: none;
+  /* Mobile touch improvements */
+  touch-action: manipulation;
+  -webkit-appearance: none;
+  appearance: none;
 }
-input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px var(--ring); border-color: transparent; }
+input:focus, select:focus, textarea:focus { 
+  box-shadow: 0 0 0 3px var(--ring); 
+  border-color: transparent;
+}
 
 input[type="number"]{ appearance: textfield; }
 input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button{ -webkit-appearance: none; margin: 0; }
@@ -381,11 +429,31 @@ textarea { min-height: 120px; }
 
 /* buttons */
 .cta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: var(--space-m); }
-.btn { display: inline-block; text-decoration: none; padding: 10px 14px; border-radius: 12px; font-weight: 800; cursor: pointer; border: 1px solid transparent; }
+.btn { 
+  display: inline-block; 
+  text-decoration: none; 
+  padding: 10px 14px; 
+  border-radius: 12px; 
+  font-weight: 800; 
+  cursor: pointer; 
+  border: 1px solid transparent;
+  /* Touch improvements */
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  /* Minimum touch target size (44x44px recommended) */
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* Prevent double-tap zoom on buttons */
+  -ms-touch-action: manipulation;
+}
 .btn.primary { background: var(--accent); color: #0a0e1d; }
 .btn.secondary { background: rgba(255,255,255,.08); color:#e7f3ff; border-color: rgba(255,255,255,.12); }
 .btn.ghost { background: transparent; color:#e7f3ff; border-color: rgba(255,255,255,.22); }
 .btn.primary:hover, .btn.secondary:hover, .btn.ghost:hover { filter: brightness(1.05); }
+.btn:active { transform: scale(0.98); }
 
 /* ========= AI helper ========= */
 .ai-box { margin-top: 8px; background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 16px; padding: 16px; }
@@ -504,4 +572,476 @@ input[type="file"]::file-selector-button:hover {
   /* FIX: a bit more headroom so planets don't cover the hero line on small phones */
   #planet-field { top: 300px; }
   .price-chip { bottom: -24px; } /* was -34px */
+}
+
+/* ================== ALIEN CHAT ================== */
+.alien-container {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.alien-ship {
+  width: 120px;
+  height: 120px;
+  cursor: pointer;
+  pointer-events: all;
+  position: relative;
+  animation: alienFloat 3s ease-in-out infinite;
+  transition: transform 0.3s ease;
+}
+
+.alien-ship:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+.alien-ship svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.5));
+}
+
+.alien-tooltip {
+  position: absolute;
+  bottom: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 18, 36, 0.95);
+  color: #00ff88;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  white-space: nowrap;
+  border: 1px solid rgba(0, 255, 136, 0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.alien-ship:hover .alien-tooltip {
+  opacity: 1;
+}
+
+@keyframes alienFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(3deg);
+  }
+}
+
+/* Alien Dialog */
+.alien-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(5, 8, 20, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.alien-dialog.active {
+  display: flex;
+}
+
+.alien-dialog-content {
+  background: linear-gradient(180deg, rgba(10, 18, 36, 0.98), rgba(6, 9, 21, 0.98));
+  border: 2px solid rgba(0, 255, 136, 0.3);
+  border-radius: 24px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 255, 136, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.alien-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e7eefc;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.alien-close:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: rotate(90deg);
+}
+
+.alien-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  background: rgba(0, 255, 136, 0.05);
+  border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.alien-avatar {
+  flex-shrink: 0;
+}
+
+.alien-title h3 {
+  margin: 0;
+  color: #00ff88;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.alien-subtitle {
+  margin: 4px 0 0 0;
+  color: rgba(231, 238, 252, 0.7);
+  font-size: 13px;
+}
+
+.alien-chat-log {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 300px;
+  max-height: 50vh;
+}
+
+.alien-chat-log .user-msg,
+.alien-chat-log .bot-msg {
+  padding: 12px 16px;
+  border-radius: 12px;
+  max-width: 85%;
+  word-wrap: break-word;
+  animation: messageSlide 0.3s ease;
+}
+
+.alien-chat-log .user-msg {
+  background: rgba(58, 134, 255, 0.15);
+  border: 1px solid rgba(58, 134, 255, 0.3);
+  color: #e7eefc;
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+.alien-chat-log .bot-msg {
+  background: rgba(0, 255, 136, 0.08);
+  border: 1px solid rgba(0, 255, 136, 0.2);
+  color: #e7eefc;
+  align-self: flex-start;
+}
+
+@keyframes messageSlide {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alien-chat-input {
+  display: flex;
+  gap: 12px;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.alien-chat-input input {
+  flex: 1;
+  background: var(--field-bg);
+  border: 1px solid var(--field-border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: var(--text);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.alien-chat-input input:focus {
+  border-color: #00ff88;
+  box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.1);
+}
+
+.alien-chat-input .btn {
+  padding: 12px 24px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+  border: none;
+  color: #0a1224;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.alien-chat-input .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+}
+
+/* ========= COMPREHENSIVE MOBILE RESPONSIVE ========= */
+@media (max-width: 640px) {
+  /* Alien Chat Mobile */
+  .alien-container {
+    top: 20px;
+    right: 20px;
+  }
+  
+  .alien-ship {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .alien-dialog-content {
+    max-width: 100%;
+    width: calc(100vw - 32px);
+    max-height: 90vh;
+    border-radius: 16px;
+    margin: 16px;
+  }
+  
+  .alien-chat-log {
+    min-height: 200px;
+    padding: 16px;
+  }
+  
+  .alien-header {
+    padding: 16px;
+  }
+  
+  .alien-chat-input {
+    padding: 12px;
+    gap: 8px;
+  }
+  
+  .alien-chat-input input {
+    font-size: 16px; /* Prevents iOS zoom on focus */
+    padding: 10px 12px;
+  }
+  
+  .alien-chat-input .btn {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+  
+  /* Regular Chat Mobile */
+  .chat-box {
+    max-width: 100%;
+    width: calc(100vw - 32px);
+    max-height: 80vh;
+  }
+  
+  .chat-head {
+    padding: 14px;
+  }
+  
+  #chatLog {
+    max-height: 50vh;
+    padding: 12px;
+  }
+  
+  .chat-input {
+    padding: 12px;
+    gap: 8px;
+  }
+  
+  #chatInput {
+    font-size: 16px; /* Prevents iOS zoom */
+  }
+  
+  /* Splash Screen Mobile */
+  .earth-container {
+    bottom: 8vh;
+    width: clamp(280px, 80vw, 400px);
+  }
+  
+  .earth-text {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+  
+  /* Hero Section Mobile */
+  .hero-copy {
+    padding: var(--space-m);
+    text-align: center;
+  }
+  
+  .hero-copy h1 {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+  
+  .hero-copy p {
+    font-size: 0.95rem;
+  }
+  
+  /* Planets Mobile */
+  .planet {
+    --size: 140px !important;
+  }
+  
+  .planet-label {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+  
+  /* Form Mobile */
+  .plan-form {
+    padding: var(--space-m);
+  }
+  
+  .field-row {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .field-label {
+    font-size: 13px;
+  }
+  
+  input, select, textarea {
+    font-size: 16px !important; /* Prevents zoom */
+  }
+  
+  /* Estimate Box Mobile */
+  .estimate-box {
+    padding: var(--space-m);
+  }
+  
+  .estimate-total {
+    font-size: 1.5rem;
+  }
+  
+  /* Button Mobile */
+  .btn {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+  
+  /* Container Mobile */
+  :root {
+    --container: 94vw;
+    --space-2xl: 32px;
+    --space-xl: 24px;
+  }
+  
+  /* Prevent horizontal scroll */
+  body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+  
+  .container {
+    padding-inline: var(--space-m);
+  }
+  
+  /* Toast Mobile */
+  .toast {
+    left: var(--space-m);
+    right: var(--space-m);
+    transform: none;
+    bottom: var(--space-m);
+  }
+}
+
+/* Tablet Responsive (641px - 900px) */
+@media (min-width: 641px) and (max-width: 900px) {
+  .alien-dialog-content {
+    max-width: 90vw;
+  }
+  
+  .chat-box {
+    max-width: 90vw;
+  }
+  
+  .planet {
+    --size: 170px;
+  }
+  
+  .hero-copy h1 {
+    font-size: 2.5rem;
+  }
+  
+  :root {
+    --container: min(900px, 90vw);
+  }
+}
+
+/* Extra Small Phones (< 380px) */
+@media (max-width: 380px) {
+  .alien-ship {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .alien-dialog-content {
+    width: calc(100vw - 16px);
+    margin: 8px;
+  }
+  
+  .planet {
+    --size: 120px !important;
+  }
+  
+  .planet-label {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+  
+  .hero-copy h1 {
+    font-size: 1.75rem;
+  }
+  
+  .earth-container {
+    width: clamp(240px, 85vw, 320px);
+  }
+  
+  .btn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+}
+
+/* Landscape Mobile Fix */
+@media (max-height: 600px) and (orientation: landscape) {
+  .alien-dialog-content {
+    max-height: 85vh;
+  }
+  
+  .alien-chat-log {
+    max-height: 40vh;
+    min-height: 150px;
+  }
+  
+  #chatLog {
+    max-height: 35vh;
+  }
+  
+  .earth-container {
+    bottom: 4vh;
+  }
 }
