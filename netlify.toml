@@ -1,0 +1,10 @@
+[build]
+  base = "."
+  publish = "."
+  command = ""
+
+# Fallback so any path serves index.html (prevents 404s)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
